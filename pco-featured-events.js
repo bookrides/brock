@@ -28,6 +28,20 @@
     var eventUrl = "https://api.planningcenteronline.com/resources/v2/event_instances?order=starts_at&include=tags,event_times,event&filter=future&per_page=3&where[tag_ids]=" + tag_id;
     
     getData(eventUrl, function(rawData) {
+        var styles = `
+        .pco-featured-event {
+            width:100%;
+            border:1px solid transparent;
+        }
+        .pco-featured-event:hover {
+            border:1px solid #fff;
+            box-shadow: 1px 5px 5px #333;
+        }`
+        
+        var styleSheet = document.createElement("style")
+        styleSheet.innerText = styles
+        document.head.appendChild(styleSheet)
+
         var data = JSON.parse(rawData).data
         var included = JSON.parse(rawData).included
         var nextEventContainer = document.getElementById(id)
@@ -53,7 +67,7 @@
                 </div>`
 
                 var imgUrl = eventDetails.attributes.image_url
-                var img = imgUrl ? `<img style="width:100%;" src="${eventDetails.attributes.image_url}" />` : defaultEventListing
+                var img = imgUrl ? `<img class="pco-featured-event" src="${eventDetails.attributes.image_url}" />` : defaultEventListing
 
                 var elem = document.createElement("a")
                 elem.target = "_blank"
