@@ -53,7 +53,7 @@
                 var eventId = nextEvent.relationships.event.data.id
                 var eventDetails = included.find(i=>i.id === eventId)
 
-                if(eventDetails.visible_in_church_center == "False") {
+                if(eventDetails && !eventDetails.attributes.visible_in_church_center) {
                     return
                 }
 
