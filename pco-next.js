@@ -22,13 +22,22 @@
     var id = `next-event-${tag_id}`
     var div = document.createElement("div")
     div.id = id
+    div.style.cssText = "text-align:center;"
     document.currentScript.insertAdjacentElement('afterEnd', div)
 
-    var eventUrl = "https://api.planningcenteronline.com/resources/v2/event_instances?order=starts_at&include=event_times&filter=future&where[tag_ids]=" + tag_id;
+    var eventUrl = "https://api.planningcenteronline.com/resources/v2/event_instances?order=starts_at&include=event_times,event&filter=future&where[tag_ids]=" + tag_id;
     
     getData(eventUrl, function(rawData) {
         var data = JSON.parse(rawData).data
-        var nextEvent = data[0]
+        var included = JSON.parse(rawData).included
+        var publicEvents = data.filter(e => {
+            var eventId = e.relationships.event.data.id
+            var eventDetails = included.find(i=>i.id === eventId)
+            e["name"] = eventDetails.attributes.name
+
+            return eventDetails && eventDetails.attributes.visible_in_church_center
+        })
+        var nextEvent = publicEvents.shift()
 
         if(nextEvent) {
             var d = new Date(nextEvent.attributes.starts_at)
@@ -39,9 +48,9 @@
             var nextEventTime = d.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })
             var nextEventEndTime = end.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })
 
-            var elem = `<div style="text-align:center;margin:auto;width:100%;padding:0;">
-                <a target="_blank" style="text-decoration: none;font-family: arial;color: white;background-color: black;padding: 1rem;font-size: 12px; text-align: center;"
-                    href="https://bethelsrock.churchcenter.com/calendar/event/${nextEvent.id}">${nextEventDate} ${nextEventTime} - ${nextEventEndTime}</a>
+            var elem = `<div style="text-align:center;background-color: black;padding: 0.5rem;margin:auto;display:inline-block;">
+                <a target="_blank" style="text-decoration: none;font-family: arial;color: white;font-size: 14px; text-align: center;"
+                    href="https://bethelsrock.churchcenter.com/calendar/event/${nextEvent.id}">${nextEvent.name} <br/> ${nextEventDate} ${nextEventTime} - ${nextEventEndTime}</a>
             </div>`
 
             var nextEventContainer = document.getElementById(id)
