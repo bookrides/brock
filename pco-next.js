@@ -48,8 +48,8 @@
             var nextEventTime = d.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })
             var nextEventEndTime = end.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })
 
-            var elem = `<div style="text-align:center;background-color: black;padding: 0.5rem;margin:auto;display:inline-block;">
-                <a target="_blank" style="text-decoration: none;font-family: arial;color: white;font-size: 14px; text-align: center;line-height:1rem;"
+            var elem = `<div style="text-align:center;background-color: black;padding: 0.5rem;margin:auto;display:inline-block;line-height:1rem;">
+                <a target="_blank" style="text-decoration: none;font-family: arial;color: white;font-size: 14px; text-align: center;"
                     href="https://bethelsrock.churchcenter.com/calendar/event/${nextEvent.id}">${nextEvent.name} <br/> ${nextEventDate} ${nextEventTime} - ${nextEventEndTime}</a>
             </div>`
 
